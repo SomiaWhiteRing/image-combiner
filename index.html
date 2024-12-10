@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <title>图片拼接器</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    .dropzone {
+      width: 840px;
+      min-height: 400px;
+      border: 2px dashed #ccc;
+      margin: 20px auto;
+      padding: 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dropzone.dragover {
+      background-color: #e1e1e1;
+      border-color: #999;
+    }
+
+    .image-container {
+      display: inline-block;
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      cursor: move;
+      user-select: none;
+      transform-origin: center center;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    .image-container img {
+      width: calc(100% - 20px);
+      height: calc(100% - 20px);
+      object-fit: contain;
+      margin: 10px;
+    }
+
+    .delete-btn {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      background: rgba(255, 0, 0, 0.8);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      line-height: 18px;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+      z-index: 100;
+    }
+
+    .delete-btn:hover {
+      background: rgba(255, 0, 0, 1);
+    }
+
+    .buttons {
+      text-align: center;
+      margin: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 0 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      background-color: #f0f0f0;
+      color: #333;
+    }
+
+    button:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    button .material-icons {
+      font-size: 20px;
+    }
+
+    .btn-select {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .btn-vertical {
+      background-color: #FF9800;
+      color: white;
+    }
+
+    .btn-horizontal {
+      background-color: #2196F3;
+      color: white;
+    }
+
+    .btn-clear {
+      background-color: #ff4444;
+      color: white;
+    }
+
+    .btn-help {
+      background-color: #673AB7;
+      color: white;
+    }
+
+    #result {
+      max-width: 100%;
+      margin: 20px auto;
+      text-align: center;
+    }
+
+    #result img {
+      max-width: 100%;
+    }
+
+    .help-dialog {
+      padding: 20px;
+      border-radius: 8px;
+      border: none;
+      max-width: 500px;
+      margin: 20px auto;
+    }
+
+    .help-dialog::backdrop {
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .help-dialog h3 {
+      margin-top: 0;
+      color: #333;
+    }
+
+    .help-dialog ul {
+      text-align: left;
+      line-height: 1.6;
+    }
+
+    .help-dialog button {
+      margin-top: 15px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="buttons">
+    <button class="btn-select" onclick="document.getElementById('fileInput').click()">
+      <span class="material-icons">add_photo_alternate</span>
+      选择图片
+    </button>
+    <button class="btn-vertical" onclick="mergeVertical()">
+      <span class="material-icons">vertical_align_center</span>
+      纵向拼接
+    </button>
+    <button class="btn-horizontal" onclick="mergeHorizontal()">
+      <span class="material-icons">horizontal_distribute</span>
+      横向拼接
+    </button>
+    <button class="btn-clear" onclick="clearAll()">
+      <span class="material-icons">delete_sweep</span>
+      清空
+    </button>
+    <button class="btn-help" onclick="showHelp()">
+      <span class="material-icons">help_outline</span>
+      使用说明
+    </button>
+  </div>
+  <input type="file" id="fileInput" multiple accept="image/*" style="display: none">
+  <div id="dropzone" class="dropzone">
+    将图片拖放到这里、粘贴图片或点击选择图片
+  </div>
+  <div id="result"></div>
+  <dialog class="help-dialog" id="helpDialog">
+    <h3>图片拼接器使用说明</h3>
+    <ul>
+      <li>添加图片：
+        <ul>
+          <li>拖放图片到虚线框内</li>
+          <li>点击"选择图片"按钮</li>
+          <li>直接粘贴图片（Ctrl+V）</li>
+        </ul>
+      </li>
+      <li>调整顺序：拖动图片可以改变位置</li>
+      <li>删除图片：点击图片右上角的红色叉号</li>
+      <li>拼接图片：
+        <ul>
+          <li>纵向拼接：图片从上到下排列</li>
+          <li>横向拼接：图片从左到右排列</li>
+        </ul>
+      </li>
+      <li>复制结果：拼接完成后按 Ctrl+C 复制图片</li>
+      <li>清空：点击"清空"按钮重新开始</li>
+    </ul>
+    <button onclick="this.parentElement.close()">关闭</button>
+  </dialog>
+  <script src="script.js"></script>
+</body>
+
+</html>
